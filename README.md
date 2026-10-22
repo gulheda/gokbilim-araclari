@@ -12,6 +12,9 @@ from gokbilim import zaman
 
 jd = zaman.tarihten_jd(datetime(2019, 6, 13, 5, 10, 55, tzinfo=timezone.utc))
 print(jd, zaman.jd_den_mjd(jd))
+
+# Yerel yıldız zamanı (derece, doğu boylamı pozitif)
+print(zaman.yerel_yildiz_zamani(datetime(1987, 4, 10, 19, 21, tzinfo=timezone.utc), 32.5))
 ```
 
 Testler: `python -m unittest discover -s tests -v`

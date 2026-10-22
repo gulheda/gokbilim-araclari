@@ -4,8 +4,8 @@ Her gün bu listeden bir sonraki **işaretlenmemiş** madde seçilir, testiyle b
 
 ## Zaman
 - [x] JD ↔ UTC, MJD, J2000'den beri gün
-- [ ] Greenwich ortalama yıldız zamanı (GMST)
-- [ ] Yerel yıldız zamanı (boylama göre)
+- [x] Greenwich ortalama yıldız zamanı (GMST)
+- [x] Yerel yıldız zamanı (boylama göre)
 - [ ] Gün başlangıcı ve saat dilimi yardımcıları (Europe/Istanbul örnekleri)
 - [ ] Ay takvimi: yeni ay / dolunay yaklaşık zamanları
 

@@ -35,6 +35,34 @@ class ZamanTests(unittest.TestCase):
     def test_j2000_den_beri_gun(self):
         self.assertEqual(zaman.j2000_den_beri_gun(datetime(2000, 1, 2, 12, tzinfo=timezone.utc)), 1.0)
 
+    def test_gmst_meeus_12a(self):
+        # Meeus örnek 12.a: 13h10m46.3668s = 197.693195 derece.
+        gmst = zaman.greenwich_yildiz_zamani(datetime(1987, 4, 10, tzinfo=timezone.utc))
+        self.assertAlmostEqual(gmst, (13 + 10 / 60 + 46.3668 / 3600) * 15, places=5)
+
+    def test_gmst_meeus_12b(self):
+        # Meeus örnek 12.b: 1987-04-10 19:21:00 UT için 8h34m57.0896s.
+        gmst = zaman.greenwich_yildiz_zamani(datetime(1987, 4, 10, 19, 21, tzinfo=timezone.utc))
+        self.assertAlmostEqual(gmst, (8 + 34 / 60 + 57.0896 / 3600) * 15, places=5)
+
+    def test_gmst_saat_dilimsiz_reddedilir(self):
+        with self.assertRaises(ValueError):
+            zaman.greenwich_yildiz_zamani(datetime(2000, 1, 1))
+
+    def test_yerel_yildiz_zamani(self):
+        t = datetime(1987, 4, 10, tzinfo=timezone.utc)
+        gmst = zaman.greenwich_yildiz_zamani(t)
+        self.assertAlmostEqual(zaman.yerel_yildiz_zamani(t, 0), gmst, places=9)
+        self.assertAlmostEqual(zaman.yerel_yildiz_zamani(t, 32.5), (197.693195 + 32.5) % 360, places=5)
+        # 360 derece sarması: GMST ~197.69 + 170 -> 7.69
+        self.assertAlmostEqual(zaman.yerel_yildiz_zamani(t, 170), 7.693195, places=5)
+
+    def test_gecersiz_boylam(self):
+        t = datetime(2000, 1, 1, tzinfo=timezone.utc)
+        for deger in (181, -181, float("nan"), True, "10"):
+            with self.subTest(deger=deger), self.assertRaises(ValueError):
+                zaman.yerel_yildiz_zamani(t, deger)
+
 
 if __name__ == "__main__":
     unittest.main()
