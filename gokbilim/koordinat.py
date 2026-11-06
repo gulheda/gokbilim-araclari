@@ -208,3 +208,35 @@ def ekvatordan_ufka(ra, dec, tarih, enlem, boylam):
     guneyden = math.atan2(bati, guney)
     yukseklik = math.degrees(math.atan2(zenit, math.hypot(guney, bati)))
     return (math.degrees(guneyden) + 180.0) % 360.0, yukseklik
+
+
+# --- Ekliptik dönüşüm -----------------------------------------------------
+
+# J2000 ortalama ekliptik eğikliği: 23°26′21.448″ (Meeus, Bölüm 22).
+EGIKLIK_J2000 = 23.4392911
+
+
+def ekvatordan_ekliptige(ra, dec):
+    """J2000 (RA, Dec) → ekliptik (boylam λ, enlem β), derece.
+
+    Sabit J2000 ekinoksu ve eğikliği kullanılır; presesyon ve nutasyon yoktur.
+    Referans: Meeus örnek 13.a — Pollux (RA 116.328942°, Dec +28.026183°) için
+    λ = 113.215630°, β = +6.684170°.
+    """
+    x, y, z = _birim_vektor(ra, dec)
+    e = math.radians(EGIKLIK_J2000)
+    y2 = y * math.cos(e) + z * math.sin(e)
+    z2 = -y * math.sin(e) + z * math.cos(e)
+    return math.degrees(math.atan2(y2, x)) % 360.0, math.degrees(math.atan2(z2, math.hypot(x, y2)))
+
+
+def ekliptikten_ekvatora(boylam, enlem):
+    """Ekliptik (λ, β) → J2000 (RA, Dec), derece."""
+    lam, beta = _sonlu(boylam, "λ"), _dec(enlem)
+    if not 0.0 <= lam < 360.0:
+        raise ValueError("λ, [0, 360) derece aralığında olmalı.")
+    lr, br, e = math.radians(lam), math.radians(beta), math.radians(EGIKLIK_J2000)
+    x, y2, z2 = math.cos(br) * math.cos(lr), math.cos(br) * math.sin(lr), math.sin(br)
+    y = y2 * math.cos(e) - z2 * math.sin(e)
+    z = y2 * math.sin(e) + z2 * math.cos(e)
+    return math.degrees(math.atan2(y, x)) % 360.0, math.degrees(math.atan2(z, math.hypot(x, y)))

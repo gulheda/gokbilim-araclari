@@ -215,5 +215,35 @@ class UfukTests(unittest.TestCase):
             k.ekvatordan_ufka(0, 0, self.T, 0, 200.0)
 
 
+class EkliptikTests(unittest.TestCase):
+    def test_meeus_13a_pollux(self):
+        lam, beta = k.ekvatordan_ekliptige(116.328942, 28.026183)
+        self.assertAlmostEqual(lam, 113.215630, places=5)
+        self.assertAlmostEqual(beta, 6.684170, places=5)
+
+    def test_ekliptik_kutbu(self):
+        # Kuzey ekliptik kutbu: RA 270° (18h), Dec 90° - eğiklik ≈ 66.5607°  =>  β = 90°.
+        _, beta = k.ekvatordan_ekliptige(270.0, 90.0 - k.EGIKLIK_J2000)
+        self.assertAlmostEqual(beta, 90.0, places=6)
+
+    def test_ilkbahar_noktasi(self):
+        lam, beta = k.ekvatordan_ekliptige(0.0, 0.0)
+        self.assertAlmostEqual(beta, 0.0, places=9)
+        self.assertLess(min(lam, 360.0 - lam), 1e-9)
+
+    def test_gidis_donus(self):
+        for ra, dec in ((0.0, 0.0), (116.328942, 28.026183), (266.4, -28.9), (359.9, -89.0), (45.0, 66.5607)):
+            with self.subTest(ra=ra, dec=dec):
+                ra2, dec2 = k.ekliptikten_ekvatora(*k.ekvatordan_ekliptige(ra, dec))
+                self.assertAlmostEqual(dec2, dec, places=7)
+                if abs(dec) < 89.999:
+                    self.assertLess(min(abs(ra2 - ra), 360.0 - abs(ra2 - ra)), 1e-6)
+
+    def test_gecersiz(self):
+        for lam, beta in ((360, 0), (-1, 0), (0, 91), (float("nan"), 0), (True, 0)):
+            with self.subTest(lam=lam, beta=beta), self.assertRaises(ValueError):
+                k.ekliptikten_ekvatora(lam, beta)
+
+
 if __name__ == "__main__":
     unittest.main()
