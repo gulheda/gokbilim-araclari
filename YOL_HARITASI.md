@@ -15,7 +15,7 @@ Her gün bu listeden bir sonraki **işaretlenmemiş** madde seçilir, testiyle b
 - [x] İki nokta arası açısal uzaklık (haversine ve vektör sürümü)
 - [x] Ekvator ↔ galaktik dönüşümü (J2000)
 - [x] Ekvator ↔ ufuk koordinatları (yükseklik, azimut)
-- [ ] Ekvator ↔ ekliptik dönüşümü
+- [x] Ekvator ↔ ekliptik dönüşümü
 
 ## Fotometri
 - [x] Büyüklük ↔ akı oranı
@@ -27,7 +27,7 @@ Her gün bu listeden bir sonraki **işaretlenmemiş** madde seçilir, testiyle b
 ## Gözlem planlama
 - [x] Güneş'in yaklaşık konumu
 - [x] Gün doğumu, batımı ve alacakaranlık saatleri
-- [ ] Bir hedefin gece boyunca yüksekliği
+- [x] Bir hedefin gece boyunca yüksekliği
 - [ ] Ay'ın yaklaşık konumu ve evresi
 - [ ] Hedef–Ay uzaklığı uyarısı
 
@@ -39,7 +39,9 @@ Her gün bu listeden bir sonraki **işaretlenmemiş** madde seçilir, testiyle b
 - [ ] Yörünge dönemi ve kaçış hızı
 
 ## Araçlar
-- [ ] Komut satırı arayüzü (`python -m gokbilim ...`)
+- [x] Komut satırı arayüzü (`python -m gokbilim ...`)
 - [ ] Türkçe hata iletileri ve birim etiketleri için tek yardımcı modül
 - [ ] Örnek defter: ZTF uyarısı gözlem zamanı ve koordinat okuma
 - [ ] Sürüm etiketi ve paket yayını için `pyproject.toml` temizliği
+- [ ] CLI: hedef yüksekliği çizelgesi komutu (`yukseklik`) ve alacakaranlık türü seçeneği
+- [ ] Ay'ın yaklaşık konumu ve evresi için USNO referanslı testler (aşağıdaki Gözlem planlama maddeleriyle birlikte)

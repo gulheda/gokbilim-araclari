@@ -61,3 +61,15 @@ print(gozlem.gunes_olaylari(date(2026, 11, 7), 41.01, 28.98, gozlem.SIVIL_ALACAK
 ```
 
 Doğuş/batış zamanları ABD Deniz Gözlemevi (USNO) ile dört yerde karşılaştırıldı; fark en çok 1 dakikadır.
+
+## Komut satırı
+
+```bash
+python -m gokbilim jd 2000-01-01T12:00:00Z
+python -m gokbilim koordinat 7h45m18.946s +28:01:34.26      # ondalık, galaktik, ekliptik
+python -m gokbilim ayrim 14h15m39.7s +19:10:57 13h25m11.6s -11:09:41   # 32.793°
+python -m gokbilim gunes --yer 41.01,28.98 --tarih 2026-11-07          # UTC
+python -m gokbilim hava-kutlesi 60
+```
+
+Geçersiz girdide çıkış kodu 2 ve Türkçe hata iletisi verilir.
