@@ -64,9 +64,6 @@ class ZamanTests(unittest.TestCase):
                 zaman.yerel_yildiz_zamani(t, deger)
 
 
-if __name__ == "__main__":
-    unittest.main()
-
 
 class SaatDilimiTests(unittest.TestCase):
     def test_istanbul_kis_eet(self):
@@ -110,3 +107,7 @@ class SaatDilimiTests(unittest.TestCase):
                 zaman.utc_den_yerele(t, kotu)
         with self.assertRaises(ValueError):
             zaman.utc_den_yerele(datetime(2024, 1, 1))
+
+
+if __name__ == "__main__":
+    unittest.main()
