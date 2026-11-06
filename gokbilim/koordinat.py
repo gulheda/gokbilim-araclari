@@ -6,6 +6,8 @@ presesyon, nutasyon ve özhareket dikkate alınmaz.
 import math
 import re
 
+from . import zaman
+
 _SAYI = re.compile(r"\d+(?:\.\d+)?")
 
 
@@ -181,3 +183,28 @@ def galaktikten_ekvatora(l, b):
     ra = math.degrees(math.atan2(e[1], e[0])) % 360.0
     dec = math.degrees(math.atan2(e[2], math.hypot(e[0], e[1])))
     return ra, dec
+
+
+# --- Ufuk koordinatları ---------------------------------------------------
+
+def ekvatordan_ufka(ra, dec, tarih, enlem, boylam):
+    """Ekvator (RA, Dec) → ufuk (azimut, yükseklik), derece.
+
+    Azimut kuzeyden doğuya doğru ölçülür (K=0, D=90, G=180, B=270); Meeus güneyden
+    batıya ölçer, aradaki fark 180°'dir. Enlem ve doğu pozitif boylam derecedir.
+    Referans: Meeus, Bölüm 13, örnek 13.b — Venüs (RA 23h09m16.641s, Dec −6°43′11.61″),
+    Washington (enlem +38°55′17″, boylam 77°03′56″ B), 1987-04-10 19:21 UT için
+    Meeus azimut 68.0337° (güneyden), yükseklik +15.1249° verir; bu fonksiyon 248.034°, 15.124°.
+    ~0.0006°'lik fark Meeus'un görünür yıldız zamanı (nutasyonlu) kullanmasındandır; burada
+    ortalama yıldız zamanı kullanılır. Kırılma düzeltmesi yoktur (geometrik yükseklik).
+    """
+    ra, dec, enlem = _ra(ra), _dec(dec), _dec(enlem)
+    h = math.radians(zaman.yerel_yildiz_zamani(tarih, boylam) - ra)
+    phi, d = math.radians(enlem), math.radians(dec)
+    # Ufuk çerçevesinde bileşenler: güney, batı, zenit. atan2 zenit ve ufuk yakınında asin'den kararlıdır.
+    guney = math.cos(d) * math.cos(h) * math.sin(phi) - math.sin(d) * math.cos(phi)
+    bati = math.cos(d) * math.sin(h)
+    zenit = math.sin(phi) * math.sin(d) + math.cos(phi) * math.cos(d) * math.cos(h)
+    guneyden = math.atan2(bati, guney)
+    yukseklik = math.degrees(math.atan2(zenit, math.hypot(guney, bati)))
+    return (math.degrees(guneyden) + 180.0) % 360.0, yukseklik

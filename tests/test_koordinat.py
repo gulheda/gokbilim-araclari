@@ -1,7 +1,8 @@
 import math
 import unittest
+from datetime import datetime, timezone
 
-from gokbilim import koordinat as k
+from gokbilim import koordinat as k, zaman
 
 
 def _h(saat, dakika, saniye):
@@ -166,6 +167,52 @@ class GalaktikTests(unittest.TestCase):
         for l, b in ((360, 0), (-1, 0), (0, 91), (float("nan"), 0), (True, 0)):
             with self.subTest(l=l, b=b), self.assertRaises(ValueError):
                 k.galaktikten_ekvatora(l, b)
+
+
+class UfukTests(unittest.TestCase):
+    T = datetime(1987, 4, 10, 19, 21, tzinfo=timezone.utc)
+
+    def test_meeus_13b(self):
+        # Meeus 13.b: Venüs, Washington. Meeus güneyden-batıya 68.0337° => kuzeyden 248.0337°; yükseklik 15.1249°.
+        az, yuk = k.ekvatordan_ufka(_h(23, 9, 16.641), -_d(6, 43, 11.61), self.T,
+                                    _d(38, 55, 17), -_d(77, 3, 56))
+        # Fark ~0.0006°: Meeus görünür (nutasyonlu), burada ortalama yıldız zamanı kullanılır.
+        self.assertAlmostEqual(az, 248.0337, delta=0.002)
+        self.assertAlmostEqual(yuk, 15.1249, delta=0.002)
+
+    def _ra(self, saat_acisi, boylam):
+        return (zaman.yerel_yildiz_zamani(self.T, boylam) - saat_acisi) % 360.0
+
+    def test_zenit_ve_meridyen(self):
+        enlem, boylam = 40.0, 30.0
+        az, yuk = k.ekvatordan_ufka(self._ra(0, boylam), enlem, self.T, enlem, boylam)
+        self.assertAlmostEqual(yuk, 90.0, places=6)
+        # Meridyende ve enlemden güneyde: azimut 180° (güney), yükseklik = 90 - enlem + dec.
+        az, yuk = k.ekvatordan_ufka(self._ra(0, boylam), 10.0, self.T, enlem, boylam)
+        self.assertAlmostEqual(az, 180.0, places=6)
+        self.assertAlmostEqual(yuk, 90.0 - enlem + 10.0, places=6)
+
+    def test_kutup_yildizi_yonu(self):
+        # Gök kutbu: yükseklik = enlem, azimut = kuzey (0°), her yıldız zamanında.
+        for boylam in (-100.0, 0.0, 120.0):
+            az, yuk = k.ekvatordan_ufka(0.0, 90.0, self.T, 41.0, boylam)
+            self.assertAlmostEqual(yuk, 41.0, places=6)
+            self.assertLess(min(az, 360.0 - az), 1e-6)
+
+    def test_ekvatorda_dogan_yildiz(self):
+        # Ekvatordaki gözlemci, ekvatordaki bir yıldızın doğuşunu (saat açısı -6h) tam doğuda görür.
+        az, yuk = k.ekvatordan_ufka(self._ra(-90.0, 0.0), 0.0, self.T, 0.0, 0.0)
+        self.assertAlmostEqual(az, 90.0, places=6)
+        self.assertAlmostEqual(yuk, 0.0, places=6)
+
+    def test_gecersiz(self):
+        for ra, dec, enlem in ((360, 0, 0), (0, 91, 0), (0, 0, -91), (float("nan"), 0, 0)):
+            with self.subTest(ra=ra, dec=dec, enlem=enlem), self.assertRaises(ValueError):
+                k.ekvatordan_ufka(ra, dec, self.T, enlem, 0.0)
+        with self.assertRaises(ValueError):
+            k.ekvatordan_ufka(0, 0, datetime(2000, 1, 1), 0, 0)
+        with self.assertRaises(ValueError):
+            k.ekvatordan_ufka(0, 0, self.T, 0, 200.0)
 
 
 if __name__ == "__main__":
