@@ -14,7 +14,7 @@ Her gün bu listeden bir sonraki **işaretlenmemiş** madde seçilir, testiyle b
 - [x] RA/Dec biçim ayrıştırıcı ("12h30m45s", "+45:30:15")
 - [x] İki nokta arası açısal uzaklık (haversine ve vektör sürümü)
 - [x] Ekvator ↔ galaktik dönüşümü (J2000)
-- [ ] Ekvator ↔ ufuk koordinatları (yükseklik, azimut)
+- [x] Ekvator ↔ ufuk koordinatları (yükseklik, azimut)
 - [ ] Ekvator ↔ ekliptik dönüşümü
 
 ## Fotometri
@@ -25,8 +25,8 @@ Her gün bu listeden bir sonraki **işaretlenmemiş** madde seçilir, testiyle b
 - [x] Büyüklük hatası yayılımı
 
 ## Gözlem planlama
-- [ ] Güneş'in yaklaşık konumu
-- [ ] Gün doğumu, batımı ve alacakaranlık saatleri
+- [x] Güneş'in yaklaşık konumu
+- [x] Gün doğumu, batımı ve alacakaranlık saatleri
 - [ ] Bir hedefin gece boyunca yüksekliği
 - [ ] Ay'ın yaklaşık konumu ve evresi
 - [ ] Hedef–Ay uzaklığı uyarısı

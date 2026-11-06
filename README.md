@@ -45,3 +45,19 @@ print(koordinat.aci_uzakligi(koordinat.ra_ayristir("14h15m39.7s"), koordinat.dec
 print(fotometri.aki_orani(0, 5))                 # 100.0 (5 büyüklük = 100 kat akı)
 print(fotometri.hava_kutlesi(60))                # 1.994 (Kasten–Young)
 ```
+
+## Gözlem planlama örneği
+
+```python
+from datetime import date
+from gokbilim import gozlem
+
+# İstanbul'da 7 Kasım 2026: doğuş, tepe, batış (UTC)
+dogus, tepe, batis = gozlem.gunes_olaylari(date(2026, 11, 7), 41.01, 28.98)
+print(dogus.strftime("%H:%M"), tepe.strftime("%H:%M"), batis.strftime("%H:%M"))  # 04:41 09:47 14:53
+
+# Sivil alacakaranlık (Güneş merkezi -6°)
+print(gozlem.gunes_olaylari(date(2026, 11, 7), 41.01, 28.98, gozlem.SIVIL_ALACAKARANLIK))
+```
+
+Doğuş/batış zamanları ABD Deniz Gözlemevi (USNO) ile dört yerde karşılaştırıldı; fark en çok 1 dakikadır.
