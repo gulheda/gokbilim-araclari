@@ -66,3 +66,47 @@ class ZamanTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class SaatDilimiTests(unittest.TestCase):
+    def test_istanbul_kis_eet(self):
+        y = zaman.utc_den_yerele(datetime(2016, 1, 1, 12, tzinfo=timezone.utc))
+        self.assertEqual((y.hour, y.utcoffset()), (14, timedelta(hours=2)))
+
+    def test_istanbul_kalici_utc3(self):
+        y = zaman.utc_den_yerele(datetime(2024, 1, 1, 12, tzinfo=timezone.utc))
+        self.assertEqual((y.hour, y.utcoffset()), (15, timedelta(hours=3)))
+
+    def test_istanbul_2015_yaz_eest(self):
+        y = zaman.utc_den_yerele(datetime(2015, 7, 1, 12, tzinfo=timezone.utc))
+        self.assertEqual(y.hour, 15)
+
+    def test_yerelden_utc(self):
+        self.assertEqual(zaman.yerelden_utc(datetime(2024, 1, 1, 15)),
+                         datetime(2024, 1, 1, 12, tzinfo=timezone.utc))
+
+    def test_yerelden_utc_dilimli_reddedilir(self):
+        with self.assertRaises(ValueError):
+            zaman.yerelden_utc(datetime(2024, 1, 1, 15, tzinfo=timezone.utc))
+
+    def test_gun_baslangici(self):
+        t = datetime(2024, 6, 15, 21, 30, tzinfo=timezone.utc)
+        self.assertEqual(zaman.yerel_gun_baslangici(t),
+                         datetime(2024, 6, 15, 21, 0, tzinfo=timezone.utc))
+        t2 = datetime(2024, 6, 15, 20, 59, tzinfo=timezone.utc)
+        self.assertEqual(zaman.yerel_gun_baslangici(t2),
+                         datetime(2024, 6, 14, 21, 0, tzinfo=timezone.utc))
+
+    def test_baska_dilim(self):
+        # UTC'de gün başlangıcı gece yarısıdır.
+        t = datetime(2024, 6, 15, 21, 30, tzinfo=timezone.utc)
+        self.assertEqual(zaman.yerel_gun_baslangici(t, "UTC"),
+                         datetime(2024, 6, 15, tzinfo=timezone.utc))
+
+    def test_gecersiz_dilim(self):
+        t = datetime(2024, 1, 1, tzinfo=timezone.utc)
+        for kotu in ("Mars/Olympus", "", None):
+            with self.assertRaises(ValueError):
+                zaman.utc_den_yerele(t, kotu)
+        with self.assertRaises(ValueError):
+            zaman.utc_den_yerele(datetime(2024, 1, 1))

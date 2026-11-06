@@ -20,3 +20,11 @@ print(zaman.yerel_yildiz_zamani(datetime(1987, 4, 10, 19, 21, tzinfo=timezone.ut
 Testler: `python -m unittest discover -s tests -v`
 
 Lisans: MIT.
+
+## Saat dilimi örneği
+
+```python
+# Gözlem gününün yerel (Istanbul) başlangıcı, UTC olarak
+print(zaman.yerel_gun_baslangici(datetime(2024, 6, 15, 21, 30, tzinfo=timezone.utc)))
+# 2024-06-15 21:00:00+00:00
+```

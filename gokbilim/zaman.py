@@ -69,3 +69,46 @@ def yerel_yildiz_zamani(tarih, boylam):
             or not -180.0 <= boylam <= 180.0:
         raise ValueError("Boylam, -180 ile 180 derece arasında sonlu bir sayı olmalı.")
     return (greenwich_yildiz_zamani(tarih) + boylam) % 360.0
+
+
+def _bolge(saat_dilimi):
+    """IANA saat dilimi adını (ör. "Europe/Istanbul") ZoneInfo'ya çevirir."""
+    from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
+    if not isinstance(saat_dilimi, str) or not saat_dilimi:
+        raise ValueError("Saat dilimi, boş olmayan bir IANA adı olmalı.")
+    try:
+        return ZoneInfo(saat_dilimi)
+    except (ZoneInfoNotFoundError, ValueError, OSError):
+        raise ValueError(f"Bilinmeyen saat dilimi: {saat_dilimi!r}")
+
+
+def utc_den_yerele(tarih, saat_dilimi="Europe/Istanbul"):
+    """Saat dilimli bir anı verilen IANA saat diliminin yerel saatine çevirir.
+
+    Referans: Türkiye 2016'dan beri kalıcı UTC+3 kullanır; öncesinde kış EET (UTC+2),
+    yaz EEST (UTC+3). Örnek: 2016-01-01 12:00 UTC → 14:00 (+02:00);
+    2024-01-01 12:00 UTC → 15:00 (+03:00). Kurallar sistemin tz veritabanından gelir.
+    """
+    return _utc(tarih).astimezone(_bolge(saat_dilimi))
+
+
+def yerelden_utc(yerel_tarih, saat_dilimi="Europe/Istanbul"):
+    """Saat dilimsiz (duvar saati) yerel zamanı UTC'ye çevirir.
+
+    Yaz saati geçişinde belirsiz/var olmayan saatler zoneinfo'nun varsayılanına
+    (fold=0) göre çözülür.
+    """
+    if yerel_tarih.tzinfo is not None:
+        raise ValueError("Yerel zaman, saat dilimsiz (naive) olmalı.")
+    return yerel_tarih.replace(tzinfo=_bolge(saat_dilimi)).astimezone(timezone.utc)
+
+
+def yerel_gun_baslangici(tarih, saat_dilimi="Europe/Istanbul"):
+    """Anın düştüğü yerel günün 00:00 anını UTC olarak döndürür.
+
+    Örnek: 2024-06-15 21:30 UTC, Istanbul'da 16 Haziran 00:30'dur; gün başlangıcı
+    2024-06-15 21:00 UTC (= 16 Haziran 00:00 +03:00).
+    """
+    yerel = utc_den_yerele(tarih, saat_dilimi)
+    gece_yarisi = yerel.replace(hour=0, minute=0, second=0, microsecond=0, fold=0)
+    return gece_yarisi.astimezone(timezone.utc)
