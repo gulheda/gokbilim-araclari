@@ -73,3 +73,16 @@ python -m gokbilim hava-kutlesi 60
 ```
 
 Geçersiz girdide çıkış kodu 2 ve Türkçe hata iletisi verilir.
+
+## Birimler ve fizik örneği
+
+```python
+from gokbilim import birimler, fizik
+
+print(birimler.uzunluk_cevir(1, "pc", "ly"))                              # 3.2616
+print(fizik.kepler_donemi(birimler.BIRIM_AU, birimler.KUTLE_GUNES) / 86400)  # 365.2569 gün (Gauss yılı)
+print(fizik.kacis_hizi(birimler.R_DUNYA_ORTALAMA, birimler.KUTLE_DUNYA) / 1e3)  # 11.19 km/s
+print(fizik.wien_dalga_boyu(5772) * 1e9)                                  # 502 nm (Güneş)
+```
+
+`fizik` işlevleri SI birimi (m, kg, s, K) bekler; dönüşüm için `birimler` kullanılır.

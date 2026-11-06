@@ -32,11 +32,11 @@ Her gün bu listeden bir sonraki **işaretlenmemiş** madde seçilir, testiyle b
 - [ ] Hedef–Ay uzaklığı uyarısı
 
 ## Fizik ve birimler
-- [ ] Astronomik birim dönüşümleri (AU, pc, ışık yılı, güneş yarıçapı/kütlesi)
-- [ ] Kepler üçüncü yasası
-- [ ] Hubble yasası ve kırmızıya kayma → hız (göreli olmayan ve göreli)
-- [ ] Siyah cisim ışıması ve Wien yasası
-- [ ] Yörünge dönemi ve kaçış hızı
+- [x] Astronomik birim dönüşümleri (AU, pc, ışık yılı, güneş yarıçapı/kütlesi)
+- [x] Kepler üçüncü yasası
+- [x] Hubble yasası ve kırmızıya kayma → hız (göreli olmayan ve göreli)
+- [x] Siyah cisim ışıması ve Wien yasası
+- [x] Yörünge dönemi ve kaçış hızı
 
 ## Araçlar
 - [x] Komut satırı arayüzü (`python -m gokbilim ...`)
