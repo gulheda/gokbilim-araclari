@@ -103,5 +103,45 @@ class GunesOlaylariTests(unittest.TestCase):
                 g.gunes_olaylari(gun, enlem, boylam, yukseklik)
 
 
+class YuksekDegerCizelgesiTests(unittest.TestCase):
+    ENLEM, BOYLAM = 41.01, 28.98
+
+    def test_sayi_ve_uclar(self):
+        bas, bit = _utc(11, 7, 0, 0), _utc(11, 7, 6, 0)
+        satirlar = g.yukseklik_cizelgesi(150.0, 20.0, bas, bit, 30, self.ENLEM, self.BOYLAM)
+        self.assertEqual(len(satirlar), 13)
+        self.assertEqual((satirlar[0][0], satirlar[-1][0]), (bas, bit))
+        self.assertEqual([satir[0] for satir in satirlar], sorted(satir[0] for satir in satirlar))
+
+    def test_degerler_tek_tek_ayni(self):
+        from gokbilim import koordinat
+        an = _utc(11, 7, 3, 0)
+        (bulunan,) = g.yukseklik_cizelgesi(150.0, 20.0, an, an, 60, self.ENLEM, self.BOYLAM)
+        self.assertEqual(bulunan[1:], koordinat.ekvatordan_ufka(150.0, 20.0, an, self.ENLEM, self.BOYLAM))
+
+    def test_gunes_tepede_en_yuksek(self):
+        # Güneş'in RA/Dec'iyle: çizelgedeki en yüksek an, hesaplanan tepe anına 10 dk içinde yakın olmalı.
+        gun = date(2026, 6, 21)
+        _, tepe, _ = g.gunes_olaylari(gun, self.ENLEM, self.BOYLAM)
+        ra, dec, _ = g.gunes_konumu(tepe)
+        satirlar = g.yukseklik_cizelgesi(ra, dec, tepe - timedelta(hours=3), tepe + timedelta(hours=3),
+                                         5, self.ENLEM, self.BOYLAM)
+        en_yuksek = max(satirlar, key=lambda s: s[2])
+        self.assertLessEqual(abs(en_yuksek[0] - tepe), timedelta(minutes=10))
+        self.assertAlmostEqual(en_yuksek[2], 90.0 - self.ENLEM + dec, delta=0.1)
+
+    def test_gecersiz(self):
+        bas, bit = _utc(11, 7, 0, 0), _utc(11, 7, 6, 0)
+        for adim in (0, 1441, float("nan"), True, "30"):
+            with self.subTest(adim=adim), self.assertRaises(ValueError):
+                g.yukseklik_cizelgesi(0, 0, bas, bit, adim, self.ENLEM, self.BOYLAM)
+        with self.assertRaises(ValueError):
+            g.yukseklik_cizelgesi(0, 0, bit, bas, 30, self.ENLEM, self.BOYLAM)
+        with self.assertRaises(ValueError):
+            g.yukseklik_cizelgesi(0, 0, datetime(2026, 1, 1), bit, 30, self.ENLEM, self.BOYLAM)
+        with self.assertRaises(ValueError):
+            g.yukseklik_cizelgesi(0, 0, _utc(1, 1, 0, 0), _utc(12, 31, 0, 0, yil=2030), 1, self.ENLEM, self.BOYLAM)
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -99,3 +99,25 @@ def gunes_olaylari(gun, enlem, boylam, yukseklik=GUNES_UFKU):
         return ara
 
     return olay(-1.0), tepe, olay(+1.0)
+
+
+def yukseklik_cizelgesi(ra, dec, baslangic, bitis, adim_dakika, enlem, boylam):
+    """Bir hedefin yüksekliğini zamana göre örnekler: [(an, azimut, yükseklik), ...].
+
+    Aralık [baslangic, bitis] iki ucu da dahildir; adım dakikadır (1-1440). Yükseklik geometriktir
+    (kırılma yok). Gece gözlem penceresi için gunes_olaylari ile birlikte kullanılır.
+    """
+    if isinstance(adim_dakika, bool) or not isinstance(adim_dakika, (int, float)) or not 1 <= adim_dakika <= 1440:
+        raise ValueError("Adım 1 ile 1440 dakika arasında olmalı.")
+    bas, bit = zaman._utc(baslangic), zaman._utc(bitis)
+    if bit < bas:
+        raise ValueError("Bitiş, başlangıçtan önce olamaz.")
+    adim = timedelta(minutes=adim_dakika)
+    if (bit - bas) / adim > 100000:
+        raise ValueError("Aralık çok fazla örnek üretir (en çok 100000).")
+    sonuc, an = [], bas
+    while an <= bit:
+        az, yuk = koordinat.ekvatordan_ufka(ra, dec, an, enlem, boylam)
+        sonuc.append((an, az, yuk))
+        an += adim
+    return sonuc
