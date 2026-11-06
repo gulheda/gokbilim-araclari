@@ -28,3 +28,20 @@ Lisans: MIT.
 print(zaman.yerel_gun_baslangici(datetime(2024, 6, 15, 21, 30, tzinfo=timezone.utc)))
 # 2024-06-15 21:00:00+00:00
 ```
+
+## Koordinat ve fotometri örneği
+
+```python
+from gokbilim import koordinat, fotometri
+
+ra = koordinat.ra_ayristir("18h36m56.336s")      # derece
+dec = koordinat.dec_ayristir("+38:47:01.28")
+print(koordinat.ekvatordan_galaktige(ra, dec))   # (67.45..., 19.24...) Vega
+
+# Meeus örnek 17.a: Arcturus–Spica
+print(koordinat.aci_uzakligi(koordinat.ra_ayristir("14h15m39.7s"), koordinat.dec_ayristir("+19:10:57"),
+                             koordinat.ra_ayristir("13h25m11.6s"), koordinat.dec_ayristir("-11:09:41")))  # 32.793
+
+print(fotometri.aki_orani(0, 5))                 # 100.0 (5 büyüklük = 100 kat akı)
+print(fotometri.hava_kutlesi(60))                # 1.994 (Kasten–Young)
+```

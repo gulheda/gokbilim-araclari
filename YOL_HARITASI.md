@@ -10,19 +10,19 @@ Her gün bu listeden bir sonraki **işaretlenmemiş** madde seçilir, testiyle b
 - [ ] Ay takvimi: yeni ay / dolunay yaklaşık zamanları
 
 ## Koordinatlar
-- [ ] Derece ↔ saat/dakika/saniye (RA) ve derece/yay dakikası/yay saniyesi (Dec) biçimleri
-- [ ] RA/Dec biçim ayrıştırıcı ("12h30m45s", "+45:30:15")
-- [ ] İki nokta arası açısal uzaklık (haversine ve vektör sürümü)
-- [ ] Ekvator ↔ galaktik dönüşümü (J2000)
+- [x] Derece ↔ saat/dakika/saniye (RA) ve derece/yay dakikası/yay saniyesi (Dec) biçimleri
+- [x] RA/Dec biçim ayrıştırıcı ("12h30m45s", "+45:30:15")
+- [x] İki nokta arası açısal uzaklık (haversine ve vektör sürümü)
+- [x] Ekvator ↔ galaktik dönüşümü (J2000)
 - [ ] Ekvator ↔ ufuk koordinatları (yükseklik, azimut)
 - [ ] Ekvator ↔ ekliptik dönüşümü
 
 ## Fotometri
-- [ ] Büyüklük ↔ akı oranı
-- [ ] Mutlak büyüklük ve uzaklık modülü
-- [ ] Hava kütlesi (plane-parallel ve Kasten–Young)
+- [x] Büyüklük ↔ akı oranı
+- [x] Mutlak büyüklük ve uzaklık modülü
+- [x] Hava kütlesi (plane-parallel ve Kasten–Young)
 - [ ] Renk indeksleri ve bant adları (ZTF g/r/i örnekleri)
-- [ ] Büyüklük hatası yayılımı
+- [x] Büyüklük hatası yayılımı
 
 ## Gözlem planlama
 - [ ] Güneş'in yaklaşık konumu
